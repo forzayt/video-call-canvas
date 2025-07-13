@@ -131,11 +131,11 @@ const ChatDrawer = ({ isOpen, onClose }: ChatDrawerProps) => {
 
   return (
     <div className={cn(
-      "h-full bg-chat-bg border-l border-border shadow-xl flex flex-col",
-      isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+      "fixed top-0 right-0 h-full w-80 bg-chat-bg border-l border-border shadow-xl transform transition-transform duration-300 z-50",
+      isOpen ? "translate-x-0" : "translate-x-full"
     )}>
       {/* Header */}
-      <div className="border-b border-border p-4 flex items-center justify-between bg-background flex-shrink-0">
+      <div className="border-b border-border p-4 flex items-center justify-between bg-background">
         <h3 className="font-semibold text-foreground">Meeting Chat</h3>
         <Button
           variant="ghost"

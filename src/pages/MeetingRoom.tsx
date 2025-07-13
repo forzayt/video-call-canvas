@@ -153,82 +153,51 @@ const MeetingRoom = () => {
         </div>
       </div>
 
-      {/* Main Content Area with Responsive Layout */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Video Grid Area */}
-        <div 
-          className={`flex-1 p-4 overflow-hidden transition-all duration-300 ${
-            (isChatOpen || isParticipantsOpen) ? 'mr-0' : ''
-          }`}
-          style={{
-            marginRight: `${(isChatOpen ? 320 : 0) + (isParticipantsOpen ? 320 : 0)}px`
-          }}
-        >
-          {pinnedUser ? (
-            /* Layout with pinned participant */
-            <div className="h-full flex gap-4">
-              {/* Pinned participant - larger */}
-              <div className="flex-1">
-                <ParticipantTile
-                  participant={pinnedUser}
-                  isPinned={true}
-                  onPin={() => handlePinParticipant(pinnedUser.id)}
-                  className="h-full"
-                />
-              </div>
-              
-              {/* Other participants - sidebar */}
-              <div className={`space-y-4 overflow-y-auto transition-all duration-300 ${
-                mainParticipants.length <= 2 ? 'w-60' : 'w-80'
-              }`}>
-                {mainParticipants.map((participant) => (
-                  <ParticipantTile
-                    key={participant.id}
-                    participant={participant}
-                    onPin={() => handlePinParticipant(participant.id)}
-                    className="h-48"
-                  />
-                ))}
-              </div>
+      {/* Video Grid */}
+      <div className="flex-1 p-4 overflow-hidden">
+        {pinnedUser ? (
+          /* Layout with pinned participant */
+          <div className="h-full flex gap-4">
+            {/* Pinned participant - larger */}
+            <div className="flex-1">
+              <ParticipantTile
+                participant={pinnedUser}
+                isPinned={true}
+                onPin={() => handlePinParticipant(pinnedUser.id)}
+                className="h-full"
+              />
             </div>
-          ) : (
-            /* Responsive Grid layout */
-            <div className={`h-full grid gap-4 transition-all duration-300 ${
-              participants.length <= 1 
-                ? "grid-cols-1" 
-                : participants.length <= 2
-                ? `${(isChatOpen || isParticipantsOpen) ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`
-                : participants.length <= 4
-                ? `${(isChatOpen || isParticipantsOpen) ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2'}`
-                : `${(isChatOpen || isParticipantsOpen) ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`
-            }`}>
-              {participants.map((participant) => (
+            
+            {/* Other participants - sidebar */}
+            <div className="w-80 space-y-4 overflow-y-auto">
+              {mainParticipants.map((participant) => (
                 <ParticipantTile
                   key={participant.id}
                   participant={participant}
                   onPin={() => handlePinParticipant(participant.id)}
+                  className="h-48"
                 />
               ))}
             </div>
-          )}
-        </div>
-
-        {/* Chat Drawer */}
-        <div className={`transition-all duration-300 ${isChatOpen ? 'w-80' : 'w-0'} overflow-hidden`}>
-          <ChatDrawer isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-        </div>
-
-        {/* Participants Drawer */}
-        <div className={`transition-all duration-300 ${isParticipantsOpen ? 'w-80' : 'w-0'} overflow-hidden`}>
-          <ParticipantsDrawer 
-            isOpen={isParticipantsOpen} 
-            onClose={() => setIsParticipantsOpen(false)}
-            participants={participants}
-            currentUserId="1"
-            onMuteParticipant={handleMuteParticipant}
-            onRemoveParticipant={handleRemoveParticipant}
-          />
-        </div>
+          </div>
+        ) : (
+          /* Grid layout */
+          <div className={`h-full grid gap-4 ${
+            participants.length <= 2 
+              ? "grid-cols-1 md:grid-cols-2" 
+              : participants.length <= 4
+              ? "grid-cols-2" 
+              : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          }`}>
+            {participants.map((participant) => (
+              <ParticipantTile
+                key={participant.id}
+                participant={participant}
+                onPin={() => handlePinParticipant(participant.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Control Bar */}
@@ -244,6 +213,19 @@ const MeetingRoom = () => {
         onLeaveMeeting={handleLeaveMeeting}
         isChatOpen={isChatOpen}
         isParticipantsOpen={isParticipantsOpen}
+      />
+
+      {/* Chat Drawer */}
+      <ChatDrawer isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
+      {/* Participants Drawer */}
+      <ParticipantsDrawer 
+        isOpen={isParticipantsOpen} 
+        onClose={() => setIsParticipantsOpen(false)}
+        participants={participants}
+        currentUserId="1"
+        onMuteParticipant={handleMuteParticipant}
+        onRemoveParticipant={handleRemoveParticipant}
       />
     </div>
   );
