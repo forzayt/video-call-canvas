@@ -19,10 +19,12 @@ interface ControlBarProps {
   isVideoOn: boolean;
   isScreenSharing: boolean;
   isChatOpen: boolean;
+  isParticipantsOpen?: boolean;
   onMuteToggle: () => void;
   onVideoToggle: () => void;
   onScreenShare: () => void;
   onChatToggle: () => void;
+  onParticipantsToggle?: () => void;
   onLeaveMeeting: () => void;
 }
 
@@ -31,10 +33,12 @@ const ControlBar = ({
   isVideoOn,
   isScreenSharing,
   isChatOpen,
+  isParticipantsOpen = false,
   onMuteToggle,
   onVideoToggle,
   onScreenShare,
   onChatToggle,
+  onParticipantsToggle,
   onLeaveMeeting,
 }: ControlBarProps) => {
   return (
@@ -106,7 +110,13 @@ const ControlBar = ({
         <Button
           variant="secondary"
           size="lg"
-          className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-all duration-200"
+          onClick={onParticipantsToggle}
+          className={cn(
+            "w-12 h-12 rounded-full transition-all duration-200",
+            isParticipantsOpen 
+              ? "bg-primary hover:bg-primary/80 text-white" 
+              : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm"
+          )}
         >
           <Users className="h-5 w-5" />
         </Button>

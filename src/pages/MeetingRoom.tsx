@@ -18,6 +18,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import ParticipantTile from "@/components/ParticipantTile";
 import ChatDrawer from "@/components/ChatDrawer";
+import ParticipantsDrawer from "@/components/ParticipantsDrawer";
 import ControlBar from "@/components/ControlBar";
 
 // Mock data for participants
@@ -47,6 +48,7 @@ const MeetingRoom = () => {
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
   const [pinnedParticipant, setPinnedParticipant] = useState<string | null>(null);
   const [userName] = useState(() => localStorage.getItem("userName") || "You");
 
@@ -103,6 +105,16 @@ const MeetingRoom = () => {
 
   const handlePinParticipant = (participantId: string) => {
     setPinnedParticipant(pinnedParticipant === participantId ? null : participantId);
+  };
+
+  const handleMuteParticipant = (participantId: string) => {
+    setParticipants(prev => 
+      prev.map(p => p.id === participantId ? { ...p, isMuted: !p.isMuted } : p)
+    );
+  };
+
+  const handleRemoveParticipant = (participantId: string) => {
+    setParticipants(prev => prev.filter(p => p.id !== participantId));
   };
 
   const mainParticipants = pinnedParticipant 
@@ -197,12 +209,24 @@ const MeetingRoom = () => {
         onVideoToggle={handleVideoToggle}
         onScreenShare={handleScreenShare}
         onChatToggle={() => setIsChatOpen(!isChatOpen)}
+        onParticipantsToggle={() => setIsParticipantsOpen(!isParticipantsOpen)}
         onLeaveMeeting={handleLeaveMeeting}
         isChatOpen={isChatOpen}
+        isParticipantsOpen={isParticipantsOpen}
       />
 
       {/* Chat Drawer */}
       <ChatDrawer isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
+      {/* Participants Drawer */}
+      <ParticipantsDrawer 
+        isOpen={isParticipantsOpen} 
+        onClose={() => setIsParticipantsOpen(false)}
+        participants={participants}
+        currentUserId="1"
+        onMuteParticipant={handleMuteParticipant}
+        onRemoveParticipant={handleRemoveParticipant}
+      />
     </div>
   );
 };
